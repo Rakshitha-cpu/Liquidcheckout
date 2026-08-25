@@ -47,10 +47,10 @@ def trigger_factoring(user_id, amount):
     
     # --- REAL AI MAGIC HAPPENS HERE ---
     prompt = f"""
-    You are an AI Risk Analyst for a micro-lending firm. A user ({user_id}) just had a payment fail for ${amount}.
+    You are an AI Risk Analyst for a micro-lending firm. A user ({user_id}) just had a payment fail for ₹{amount}.
     You must decide if we should buy this debt and offer them an EMI plan.
     Assume they have an average credit history. 
-    If amount is > $1000, reject it as too risky. Otherwise, approve it.
+    If amount is > ₹100000, reject it as too risky. Otherwise, approve it.
     Respond ONLY with this exact JSON structure: {{"approved": true or false, "reason": "1 short sentence explaining why"}}
     """
     
@@ -68,7 +68,7 @@ def trigger_factoring(user_id, amount):
                 "method": "factoring", 
                 "merchant_payout": merchant_payout, 
                 "user_emi": emi,
-                "message": f"AI Approved! Pay in 6 EMIs of ${emi}/mo. Reason: {ai_decision.get('reason')}"
+                "message": f"AI Approved! Pay in 6 EMIs of ₹{emi}/mo. Reason: {ai_decision.get('reason')}"
             }
         else:
             log("factoring_rejected", {"ai_reason": ai_decision.get('reason')})
@@ -102,12 +102,12 @@ def recover(user_id: str, amount: float):
     audit_trail.clear()
     log("payment_failed_intercepted", {"user": user_id, "amount": amount})
 
-    if amount >= 500:
+    if amount >= 40000:
         result = trigger_factoring(user_id, amount)
         if result["success"]: return {"recovery": result, "audit": audit_trail}
         result = trigger_split_tender(user_id, amount)
         return {"recovery": result, "audit": audit_trail}
-    elif 50 <= amount < 500:
+    elif 4000 <= amount < 40000:
         return {"recovery": trigger_split_tender(user_id, amount), "audit": audit_trail}
     else:
         return {"recovery": trigger_data_for_debt(user_id, amount), "audit": audit_trail}

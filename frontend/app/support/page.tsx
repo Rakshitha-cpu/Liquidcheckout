@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export default function Support() {
   const [messages, setMessages] = useState([
-    { sender: "ai", text: "Hello! I noticed your $150 payment for the Nike Sneakers failed. I'm the Liquid Checkout AI Assistant. Do you have any questions or need help exploring payment options?" }
+    { sender: "ai", text: "Hello! I noticed your ₹12,000 payment for the Nike Sneakers failed. I'm the Liquid Checkout AI Assistant. Do you have any questions or need help exploring payment options?" }
   ]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -12,23 +12,21 @@ export default function Support() {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // Add user message
     const newMessages = [...messages, { sender: "user", text: input }];
     setMessages(newMessages);
     setInput("");
     setIsTyping(true);
 
-    // Simulate AI thinking and responding
     setTimeout(() => {
       let aiResponse = "I can definitely help with that! Let me analyze your options...";
       
       const userText = input.toLowerCase();
       if (userText.includes("why")) {
-        aiResponse = "Your bank declined the charge due to 'Insufficient Limits'. But don't worry, I can split this $150 bill across two different cards for you. Would you like to do $75 on each?";
+        aiResponse = "Your bank declined the charge due to 'Insufficient Limits'. But don't worry, I can split this ₹12,000 bill across two different cards for you. Would you like to do ₹6,000 on each?";
       } else if (userText.includes("split") || userText.includes("yes")) {
-        aiResponse = "Great! I have generated two Razorpay links for you. [Link A: $75] and [Link B: $75]. Once both are paid, your order is confirmed!";
+        aiResponse = "Great! I have generated two Razorpay links for you. [Link A: ₹6,000] and [Link B: ₹6,000]. Once both are paid, your order is confirmed!";
       } else if (userText.includes("discount") || userText.includes("waive")) {
-        aiResponse = "I can't offer a cash discount, but if you complete a quick 5-minute feedback survey, I can waive $15 off your total right now. Want to try the Data-for-Debt option?";
+        aiResponse = "I can't offer a cash discount, but if you complete a quick 5-minute feedback survey, I can waive ₹1,200 off your total right now. Want to try the Data-for-Debt option?";
       }
 
       setMessages([...newMessages, { sender: "ai", text: aiResponse }]);
@@ -52,7 +50,7 @@ export default function Support() {
           <div className="mb-4">
             <p className="text-gray-400 text-sm">Attempted Purchase</p>
             <p className="font-bold text-lg">Nike Sneakers</p>
-            <p className="text-red-400 font-bold">$150.00</p>
+            <p className="text-red-400 font-bold">₹12,000.00</p>
           </div>
 
           <div className="mb-6">
@@ -60,9 +58,38 @@ export default function Support() {
             <p className="font-mono text-yellow-400 text-sm bg-gray-800 p-2 rounded mt-1">ERR_INSUFFICIENT_FUNDS</p>
           </div>
 
-          <button className="w-full bg-red-900/50 hover:bg-red-900 text-red-300 py-3 rounded-xl border border-red-800 transition text-sm font-bold">
+          <button className="w-full bg-red-900/50 hover:bg-red-900 text-red-300 py-3 rounded-xl border border-red-800 transition text-sm font-bold mb-6">
             ⚠️ Escalate to Human Admin
           </button>
+
+          {/* User History Panel */}
+          <div className="mt-8 pt-6 border-t border-gray-800">
+            <h3 className="text-gray-300 font-bold mb-4 text-sm uppercase tracking-widest flex items-center gap-2">
+              <span>📅</span> User History
+            </h3>
+            
+            <div className="space-y-3">
+              <div className="bg-gray-800 p-3 rounded-lg border border-green-900/30">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-sm font-bold text-white">Apple Watch</span>
+                  <span className="text-xs text-green-400 font-bold">PAID (EMI)</span>
+                </div>
+                <p className="text-xs text-gray-400">May 14, 2026 • AI Factoring Approved</p>
+              </div>
+
+              <div className="bg-gray-800 p-3 rounded-lg border border-purple-900/30">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-sm font-bold text-white">Spotify Sub</span>
+                  <span className="text-xs text-purple-400 font-bold">WAIVED</span>
+                </div>
+                <p className="text-xs text-gray-400">Apr 02, 2026 • Data-for-Debt Completed</p>
+              </div>
+            </div>
+            
+            <p className="text-xs text-gray-500 mt-4 text-center">
+              Agent has full context of these past interactions.
+            </p>
+          </div>
         </div>
 
         {/* Right Panel: Chat Interface */}
@@ -73,10 +100,9 @@ export default function Support() {
               <h2 className="text-xl font-bold text-indigo-400">AI Recovery Assistant</h2>
               <p className="text-xs text-green-400">● Online | Conversational Mode</p>
             </div>
-            <a href="/" className="text-sm text-gray-400 hover:text-white underline">Back to Store</a>
+            <a href="/store" className="text-sm text-gray-400 hover:text-white underline">Back to Store</a>
           </div>
 
-          {/* Chat History */}
           <div className="flex-1 p-6 overflow-y-auto flex flex-col gap-4">
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
@@ -100,7 +126,6 @@ export default function Support() {
             )}
           </div>
 
-          {/* Input Box */}
           <div className="p-4 border-t border-gray-800">
             <form onSubmit={handleSend} className="flex gap-2">
               <input 
