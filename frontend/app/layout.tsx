@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import ChatWidget from "@/components/ChatWidget";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,7 +37,7 @@ export default function RootLayout({
               <a href="/docs" className="text-gray-300 hover:text-white hover:text-indigo-400 transition">API Docs</a>
               <div className="w-px h-5 bg-gray-700 mx-2"></div>
               <a href="/store" className="text-gray-300 hover:text-white transition flex items-center gap-1">🛍️ Demo Store</a>
-              <a href="/support" className="text-gray-300 hover:text-white transition flex items-center gap-1">💬 AI Support</a>
+              <a href="/support" className="text-gray-300 hover:text-white transition flex items-center gap-1">🛠️ Agent Desk</a>
               <a href="/dashboard" className="bg-indigo-600/20 text-indigo-400 border border-indigo-500/50 px-4 py-2 rounded-lg hover:bg-indigo-600 hover:text-white transition flex items-center gap-1">
                 📊 Merchant Admin
               </a>
@@ -49,6 +50,9 @@ export default function RootLayout({
         <div className="flex-1 w-full flex flex-col">
           {children}
         </div>
+
+        {/* Global Floating AI Chat Bot */}
+        <ChatWidget />
 
       </body>
     </html>
