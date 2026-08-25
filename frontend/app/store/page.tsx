@@ -46,7 +46,7 @@ export default function Storefront() {
       </div>
 
       {/* Instruction Guide for Judges */}
-      <div className="w-full max-w-4xl bg-indigo-900/20 border border-indigo-500/30 rounded-3xl p-8 mb-12 shadow-2xl flex flex-col md:flex-row gap-8 items-center">
+      <div className="w-full max-w-[1400px] bg-indigo-900/20 border border-indigo-500/30 rounded-3xl p-8 mb-12 shadow-2xl flex flex-col md:flex-row gap-8 items-center">
         <div className="flex-1">
           <h2 className="text-2xl font-bold text-indigo-300 mb-4 flex items-center gap-2">
             <span>ℹ️</span> How to test this demo:
@@ -69,7 +69,7 @@ export default function Storefront() {
       </div>
 
       {/* Dynamic Search & Buy Bar */}
-      <div className="w-full max-w-4xl bg-gray-900 border border-gray-700 rounded-3xl p-8 mb-12 shadow-2xl">
+      <div className="w-full max-w-[1400px] bg-gray-900 border border-gray-700 rounded-3xl p-8 mb-12 shadow-2xl">
         <h2 className="text-sm font-bold text-gray-300 uppercase tracking-widest mb-4">🔍 Try a custom amount</h2>
         <form onSubmit={handleCustomBuy} className="flex flex-col md:flex-row gap-4">
           <input 
@@ -102,7 +102,7 @@ export default function Storefront() {
       </div>
 
       {/* Quick Demo Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 w-full max-w-4xl">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 w-full max-w-[1400px]">
 
         {/* High Ticket */}
         <div className="bg-gray-800 rounded-3xl p-8 flex flex-col items-center shadow-lg hover:ring-2 ring-indigo-500 transition cursor-pointer" onClick={() => simulateFailedPayment(96000)}>
@@ -137,7 +137,7 @@ export default function Storefront() {
 
       {/* Loading State */}
       {loading && (
-        <div className="flex flex-col items-center text-indigo-300 my-10">
+        <div className="flex flex-col items-center text-indigo-300 my-10 w-full max-w-[1400px]">
           <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
           <p className="animate-pulse text-xl font-bold">AI Intercepting Failed Payment...</p>
         </div>
@@ -145,7 +145,7 @@ export default function Storefront() {
 
       {/* Result Panel */}
       {result && !loading && (
-        <div className="w-full max-w-4xl bg-gray-800 rounded-3xl p-10 shadow-2xl border border-gray-700 animate-fade-in-up">
+        <div className="w-full max-w-[1400px] bg-gray-800 rounded-3xl p-10 shadow-2xl border border-gray-700 animate-fade-in-up">
 
           {/* Error State */}
           {result.error && (
