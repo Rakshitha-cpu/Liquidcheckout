@@ -5,11 +5,15 @@ export default function Storefront() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [showLogs, setShowLogs] = useState(false);
+  
+  // Custom Product State
+  const [customName, setCustomName] = useState("");
+  const [customPrice, setCustomPrice] = useState("");
 
   const simulateFailedPayment = async (amount: number) => {
     setLoading(true);
     setResult(null);
-    setShowLogs(false); // Reset logs on new payment
+    setShowLogs(false);
     try {
       const res = await fetch(
         `http://127.0.0.1:8000/recover?user_id=U101&amount=${amount}`,
@@ -23,6 +27,14 @@ export default function Storefront() {
     setLoading(false);
   };
 
+  const handleCustomBuy = (e: React.FormEvent) => {
+    e.preventDefault();
+    const price = parseInt(customPrice);
+    if (price > 0) {
+      simulateFailedPayment(price);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-gray-950 text-white flex flex-col items-center justify-center p-8">
 
@@ -30,9 +42,49 @@ export default function Storefront() {
       <h1 className="text-4xl font-bold mb-2 text-indigo-400">
         Liquid Checkout
       </h1>
-      <p className="text-gray-400 mb-10 text-center max-w-md">
+      <p className="text-gray-400 mb-8 text-center max-w-md">
         AI Revenue Recovery Engine — No failed payment goes unrecovered.
       </p>
+
+      {/* Dynamic Search & Buy Bar */}
+      <div className="w-full max-w-3xl bg-gray-900 border border-gray-700 rounded-2xl p-6 mb-8 shadow-2xl">
+        <h2 className="text-sm font-bold text-gray-300 uppercase tracking-widest mb-4">🔍 Search & Buy Any Product</h2>
+        <form onSubmit={handleCustomBuy} className="flex gap-4">
+          <input 
+            type="text" 
+            required
+            value={customName}
+            onChange={(e) => setCustomName(e.target.value)}
+            placeholder="Product Name (e.g., iPhone 15)" 
+            className="flex-1 bg-gray-800 border border-gray-700 rounded-xl p-3 text-white focus:outline-none focus:border-indigo-500"
+          />
+          <div className="relative w-40">
+            <span className="absolute left-4 top-3 text-gray-400">₹</span>
+            <input 
+              type="number" 
+              required
+              min="1"
+              value={customPrice}
+              onChange={(e) => setCustomPrice(e.target.value)}
+              placeholder="Price" 
+              className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3 pl-8 text-white focus:outline-none focus:border-indigo-500"
+            />
+          </div>
+          <button 
+            type="submit"
+            className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 rounded-xl transition"
+          >
+            Buy Now
+          </button>
+        </form>
+      </div>
+
+      {/* Quick Demo Cards */}
+      <div className="flex w-full max-w-3xl items-center gap-4 mb-4">
+        <div className="h-px bg-gray-800 flex-1"></div>
+        <p className="text-xs text-gray-500 uppercase tracking-widest font-bold">Or Quick Test Scenarios</p>
+        <div className="h-px bg-gray-800 flex-1"></div>
+      </div>
 
       {/* Product Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 w-full max-w-3xl">
@@ -40,42 +92,39 @@ export default function Storefront() {
         {/* High Ticket */}
         <div className="bg-gray-800 rounded-2xl p-6 flex flex-col items-center shadow-lg hover:ring-2 ring-indigo-500 transition">
           <span className="text-3xl mb-2">💻</span>
-          <h2 className="text-lg font-semibold">MacBook Air</h2>
+          <h2 className="text-lg font-semibold text-center">MacBook Air</h2>
           <p className="text-indigo-400 text-xl font-bold my-2">₹96,000</p>
-          <p className="text-xs text-gray-400 mb-4">Triggers: Factoring AI</p>
           <button
             onClick={() => simulateFailedPayment(96000)}
-            className="bg-indigo-600 hover:bg-indigo-500 text-white py-2 px-4 rounded-xl w-full transition"
+            className="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-xl w-full transition text-sm"
           >
-            Buy Now
+            Quick Buy
           </button>
         </div>
 
         {/* Mid Ticket */}
         <div className="bg-gray-800 rounded-2xl p-6 flex flex-col items-center shadow-lg hover:ring-2 ring-indigo-500 transition">
           <span className="text-3xl mb-2">👟</span>
-          <h2 className="text-lg font-semibold">Nike Sneakers</h2>
+          <h2 className="text-lg font-semibold text-center">Nike Sneakers</h2>
           <p className="text-indigo-400 text-xl font-bold my-2">₹12,000</p>
-          <p className="text-xs text-gray-400 mb-4">Triggers: Split Tender</p>
           <button
             onClick={() => simulateFailedPayment(12000)}
-            className="bg-indigo-600 hover:bg-indigo-500 text-white py-2 px-4 rounded-xl w-full transition"
+            className="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-xl w-full transition text-sm"
           >
-            Buy Now
+            Quick Buy
           </button>
         </div>
 
         {/* Low Ticket */}
         <div className="bg-gray-800 rounded-2xl p-6 flex flex-col items-center shadow-lg hover:ring-2 ring-indigo-500 transition">
           <span className="text-3xl mb-2">🎬</span>
-          <h2 className="text-lg font-semibold">Netflix Monthly</h2>
+          <h2 className="text-lg font-semibold text-center">Netflix Sub</h2>
           <p className="text-indigo-400 text-xl font-bold my-2">₹1,200</p>
-          <p className="text-xs text-gray-400 mb-4">Triggers: Data-for-Debt</p>
           <button
             onClick={() => simulateFailedPayment(1200)}
-            className="bg-indigo-600 hover:bg-indigo-500 text-white py-2 px-4 rounded-xl w-full transition"
+            className="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-xl w-full transition text-sm"
           >
-            Buy Now
+            Quick Buy
           </button>
         </div>
       </div>
