@@ -17,39 +17,66 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} bg-gray-950 text-white min-h-screen flex flex-col`}>
+      <body className={`${inter.className} bg-gray-950 text-white min-h-screen flex`}>
         
-        {/* Professional Global Navigation Bar */}
-        <nav className="w-full bg-gray-900/90 backdrop-blur-md border-b border-gray-800 p-4 sticky top-0 z-50">
-          <div className="w-full flex justify-between items-center px-4 md:px-10">
-            
-            {/* Logo */}
-            <a href="/" className="flex items-center gap-2 hover:opacity-80 transition cursor-pointer">
-              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/30">
+        {/* Global Sidebar Navigation */}
+        <aside className="w-64 bg-gray-900 border-r border-gray-800 flex flex-col shrink-0 sticky top-0 h-screen">
+          
+          {/* Logo Area */}
+          <div className="p-6 border-b border-gray-800">
+            <a href="/" className="flex items-center gap-3 hover:opacity-80 transition cursor-pointer">
+              <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/30 text-xl">
                 💧
               </div>
-              <span className="font-extrabold tracking-tight text-xl">Liquid</span>
+              <div>
+                <h1 className="font-extrabold tracking-tight text-xl leading-none">Liquid</h1>
+                <p className="text-xs text-gray-400 font-medium">Checkout 2.0</p>
+              </div>
+            </a>
+          </div>
+
+          {/* Links Area */}
+          <div className="flex-1 overflow-y-auto py-6 px-4 space-y-2">
+            
+            <p className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-3 mb-2 mt-2">Public</p>
+            <a href="/" className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition font-medium">
+              <span>🏠</span> Home
+            </a>
+            <a href="/store" className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition font-medium">
+              <span>🛍️</span> Demo Store
+            </a>
+            <a href="/docs" className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition font-medium">
+              <span>📚</span> API Docs
             </a>
 
-            {/* Links */}
-            <div className="flex gap-6 text-sm font-bold items-center">
-              <a href="/docs" className="text-gray-300 hover:text-white hover:text-indigo-400 transition">API Docs</a>
-              <div className="w-px h-5 bg-gray-700 mx-2"></div>
-              <a href="/store" className="text-gray-300 hover:text-white transition flex items-center gap-1">🛍️ Demo Store</a>
-              <a href="/support" className="text-gray-300 hover:text-white transition flex items-center gap-1">🛠️ Agent Desk</a>
-              <a href="/dashboard" className="bg-indigo-600/20 text-indigo-400 border border-indigo-500/50 px-4 py-2 rounded-lg hover:bg-indigo-600 hover:text-white transition flex items-center gap-1">
-                📊 Merchant Admin
-              </a>
-              <a href="/login" className="bg-white text-black px-5 py-2 rounded-lg hover:bg-gray-200 transition ml-2">
-                Login
-              </a>
-            </div>
-            
+            <div className="my-6 border-t border-gray-800"></div>
+
+            <p className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-3 mb-2 mt-4">Merchant Admin</p>
+            <a href="/dashboard" className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition font-medium">
+              <span>📊</span> Dashboard
+            </a>
+            <a href="/settings" className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition font-medium">
+              <span>⚙️</span> AI Settings
+            </a>
+            <a href="/support" className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition font-medium">
+              <span>💬</span> Agent Desk
+            </a>
+            <a href="/security" className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition font-medium">
+              <span>🛡️</span> Security & Trust
+            </a>
+
           </div>
-        </nav>
+
+          {/* User Profile / Login Area */}
+          <div className="p-4 border-t border-gray-800">
+            <a href="/login" className="flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-lg transition shadow-lg shadow-indigo-600/20">
+              Login
+            </a>
+          </div>
+        </aside>
 
         {/* Page Content */}
-        <div className="flex-1 w-full flex flex-col">
+        <div className="flex-1 w-full flex flex-col h-screen overflow-y-auto relative">
           {children}
         </div>
 
