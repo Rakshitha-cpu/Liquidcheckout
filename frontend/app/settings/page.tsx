@@ -77,7 +77,7 @@ export default function AISettings() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-bold text-gray-200">Agentic Factoring (EMI)</p>
-                  <p className="text-xs text-gray-500">Allow AI to offer micro-loans for > ₹40k</p>
+                  <p className="text-xs text-gray-500">Allow AI to offer micro-loans for &gt; ₹40k</p>
                 </div>
                 <button onClick={() => setEnableFactoring(!enableFactoring)} className={`w-12 h-6 rounded-full transition-colors relative ${enableFactoring ? 'bg-green-500' : 'bg-gray-800'}`}>
                   <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-transform ${enableFactoring ? 'translate-x-7' : 'translate-x-1'}`}></div>
