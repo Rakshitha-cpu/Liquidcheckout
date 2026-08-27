@@ -1,9 +1,11 @@
-import os
-from dotenv import load_dotenv
+from pydantic_settings import BaseSettings
 
-load_dotenv()
+class Settings(BaseSettings):
+    razorpay_key_id: str = "rzp_test_mock_key_123"
+    razorpay_key_secret: str = "rzp_test_mock_secret_456"
+    gemini_api_key: str = "AIzaSy_mock_gemini_key_789"
+    
+    class Config:
+        env_file = ".env"
 
-RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
-RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-CALLBACK_URL = os.getenv("CALLBACK_URL", "http://localhost:3000/success")
+settings = Settings()
