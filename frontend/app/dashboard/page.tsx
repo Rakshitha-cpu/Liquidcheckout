@@ -1,18 +1,18 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const generateBatch = () => {
   const batch = [];
   const methods = ["factoring", "split_tender", "data_for_debt"];
-  const items = ["MacBook", "Sneakers", "SaaS Sub", "Headphones", "Office Chair"];
+  const items = ["MacBook Pro", "Sneakers", "SaaS Sub", "Headphones", "Office Chair"];
   
-  for (let i = 1; i <= 100; i++) {
+  for (let i = 1; i <= 30; i++) {
     const amount = Math.floor(Math.random() * 100000) + 1200;
     let method = "data_for_debt";
     if (amount > 40000) method = "factoring";
     else if (amount > 4000) method = "split_tender";
 
-    const isSuccess = Math.random() > 0.15; 
+    const isSuccess = Math.random() > 0.10; 
     let recovered = 0;
     
     if (isSuccess) {
@@ -32,116 +32,135 @@ const generateBatch = () => {
   return batch;
 };
 
-const mockSessions = generateBatch();
-
-const methodColors: Record<string, string> = {
-  factoring: "bg-green-600",
-  split_tender: "bg-yellow-500 text-black",
-  data_for_debt: "bg-purple-600",
-};
-
-const methodLabels: Record<string, string> = {
-  factoring: "Agentic Factoring",
-  split_tender: "Split Tender",
-  data_for_debt: "Data-for-Debt",
-};
-
 export default function Dashboard() {
-  const [sessions] = useState(mockSessions);
+  const [sessions, setSessions] = useState<any[]>([]);
+
+  useEffect(() => {
+    setSessions(generateBatch());
+  }, []);
 
   const totalFailed = sessions.reduce((s, r) => s + r.amount, 0);
   const totalRecovered = sessions.reduce((s, r) => s + r.recovered, 0);
-  const totalLost = totalFailed - totalRecovered;
-  const recoveryRate = ((totalRecovered / totalFailed) * 100).toFixed(1);
+  const recoveryRate = totalFailed ? ((totalRecovered / totalFailed) * 100).toFixed(1) : "0.0";
 
   return (
-    <main className="min-h-screen bg-gray-950 text-white p-8">
-      <div className="max-w-5xl mx-auto">
-        <h1 className="text-4xl font-bold text-indigo-400 mb-1">
-          Merchant Dashboard
-        </h1>
-        <p className="text-gray-400 mb-8">
-          Live Revenue Recovery Analytics — Liquid Checkout Engine
-        </p>
+    <main className="min-h-screen bg-[#050505] text-white p-8 relative overflow-hidden">
+      
+      {/* Background Glow */}
+      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-indigo-600/20 rounded-full blur-[120px]"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-purple-600/20 rounded-full blur-[120px]"></div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-          <div className="bg-gray-800 rounded-2xl p-5 text-center">
-            <p className="text-gray-400 text-xs uppercase tracking-widest mb-1">Total Failed</p>
-            <p className="text-2xl font-bold text-red-400">₹{totalFailed.toLocaleString()}</p>
+      <div className="max-w-6xl mx-auto relative z-10">
+        
+        {/* Header */}
+        <div className="flex justify-between items-end mb-12 border-b border-gray-800 pb-6">
+          <div>
+            <h1 className="text-4xl font-extrabold tracking-tight text-white mb-2">
+              Command Center
+            </h1>
+            <p className="text-indigo-400 font-mono text-sm tracking-widest uppercase">
+              Live AI Interception Feed
+            </p>
           </div>
-          <div className="bg-gray-800 rounded-2xl p-5 text-center">
-            <p className="text-gray-400 text-xs uppercase tracking-widest mb-1">Total Recovered</p>
-            <p className="text-2xl font-bold text-green-400">₹{totalRecovered.toLocaleString()}</p>
-          </div>
-          <div className="bg-gray-800 rounded-2xl p-5 text-center">
-            <p className="text-gray-400 text-xs uppercase tracking-widest mb-1">Revenue Lost</p>
-            <p className="text-2xl font-bold text-yellow-400">₹{totalLost.toLocaleString()}</p>
-          </div>
-          <div className="bg-gray-800 rounded-2xl p-5 text-center">
-            <p className="text-gray-400 text-xs uppercase tracking-widest mb-1">Recovery Rate</p>
-            <p className="text-2xl font-bold text-indigo-400">{recoveryRate}%</p>
+          <div className="text-right">
+            <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">System Status</p>
+            <div className="flex items-center gap-2 bg-green-900/30 border border-green-800 px-4 py-1.5 rounded-full">
+              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+              <span className="text-green-400 text-xs font-bold uppercase tracking-wider">Gemini Active</span>
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-          {["factoring", "split_tender", "data_for_debt"].map((method) => {
-            const methodSessions = sessions.filter((s) => s.method === method);
-            const recovered = methodSessions.reduce((s, r) => s + r.recovered, 0);
-            return (
-              <div key={method} className="bg-gray-800 rounded-2xl p-5">
-                <span className={`text-xs font-bold px-3 py-1 rounded-full ${methodColors[method]}`}>
-                  {methodLabels[method]}
-                </span>
-                <p className="text-2xl font-bold text-white mt-3">₹{recovered.toLocaleString()}</p>
-                <p className="text-gray-400 text-sm">{methodSessions.length} transactions recovered</p>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+          
+          {/* Circular Recovery Rate (Takes up 1 column) */}
+          <div className="bg-gray-900/50 backdrop-blur-xl border border-gray-800 rounded-3xl p-8 flex flex-col items-center justify-center shadow-2xl">
+            <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Total Recovery Rate</h2>
+            <div className="relative w-48 h-48 rounded-full border-8 border-gray-800 flex items-center justify-center">
+              <div className="absolute inset-0 rounded-full border-8 border-indigo-500 border-t-transparent animate-spin" style={{ animationDuration: '3s' }}></div>
+              <div className="text-center z-10 bg-gray-950 w-36 h-36 rounded-full flex flex-col items-center justify-center shadow-inner">
+                <span className="text-4xl font-extrabold text-white">{recoveryRate}%</span>
+                <span className="text-xs text-indigo-400 mt-1 uppercase tracking-widest">Saved</span>
               </div>
-            );
-          })}
+            </div>
+          </div>
+
+          {/* Metric Cards (Takes up 2 columns) */}
+          <div className="lg:col-span-2 grid grid-cols-2 gap-4">
+            <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-3xl p-8 flex flex-col justify-between relative overflow-hidden group hover:border-red-500/50 transition">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-red-600/10 rounded-full blur-3xl group-hover:bg-red-600/20 transition"></div>
+              <p className="text-gray-400 text-sm uppercase tracking-widest font-bold">Total Abandoned</p>
+              <p className="text-4xl font-extrabold text-white mt-4 tracking-tight">₹{totalFailed.toLocaleString()}</p>
+            </div>
+            
+            <div className="bg-gradient-to-br from-indigo-900/40 to-gray-950 border border-indigo-500/30 rounded-3xl p-8 flex flex-col justify-between relative overflow-hidden group hover:border-indigo-400 transition">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-600/20 rounded-full blur-3xl group-hover:bg-indigo-600/30 transition"></div>
+              <p className="text-indigo-300 text-sm uppercase tracking-widest font-bold">AI Recovered</p>
+              <p className="text-4xl font-extrabold text-white mt-4 tracking-tight">₹{totalRecovered.toLocaleString()}</p>
+            </div>
+
+            {/* Performance Breakdown */}
+            <div className="col-span-2 bg-gray-900/50 backdrop-blur-md border border-gray-800 rounded-3xl p-6 flex justify-between items-center">
+              <div className="text-center w-full border-r border-gray-800">
+                <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Factoring</p>
+                <p className="text-green-400 font-bold text-xl">{sessions.filter(s => s.method === 'factoring' && s.status === 'success').length} Won</p>
+              </div>
+              <div className="text-center w-full border-r border-gray-800">
+                <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Split Tender</p>
+                <p className="text-yellow-400 font-bold text-xl">{sessions.filter(s => s.method === 'split_tender' && s.status === 'success').length} Won</p>
+              </div>
+              <div className="text-center w-full">
+                <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Data-for-Debt</p>
+                <p className="text-purple-400 font-bold text-xl">{sessions.filter(s => s.method === 'data_for_debt' && s.status === 'success').length} Won</p>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        <div className="bg-gray-800 rounded-2xl p-6">
-          <h2 className="text-lg font-semibold mb-4 text-gray-200 uppercase tracking-widest text-sm">
-            Compliance Audit Log — All Sessions
+        {/* Live Interception Ticker */}
+        <div className="bg-black border border-gray-800 rounded-3xl p-8 shadow-2xl relative">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-50"></div>
+          <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-3">
+            <span>📡</span> Live AI Interceptions
           </h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-gray-400 text-left border-b border-gray-700">
-                  <th className="pb-3 pr-4">User</th>
-                  <th className="pb-3 pr-4">Item</th>
-                  <th className="pb-3 pr-4">Failed Amount</th>
-                  <th className="pb-3 pr-4">Strategy Used</th>
-                  <th className="pb-3 pr-4">Recovered</th>
-                  <th className="pb-3">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sessions.map((s) => (
-                  <tr key={s.id} className="border-b border-gray-700 hover:bg-gray-700 transition">
-                    <td className="py-3 pr-4 font-mono text-indigo-300">{s.id}</td>
-                    <td className="py-3 pr-4">{s.item}</td>
-                    <td className="py-3 pr-4 text-red-400">₹{s.amount.toLocaleString()}</td>
-                    <td className="py-3 pr-4">
-                      <span className={`text-xs font-bold px-2 py-1 rounded-full ${methodColors[s.method]}`}>
-                        {methodLabels[s.method]}
-                      </span>
-                    </td>
-                    <td className="py-3 pr-4 text-green-400 font-bold">
-                      ₹{s.recovered.toLocaleString()}
-                    </td>
-                    <td className="py-3">
-                      {s.status === "success" ? (
-                        <span className="text-green-400 font-bold">Recovered</span>
-                      ) : (
-                        <span className="text-red-400 font-bold">Stopped (Refunded)</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          
+          <div className="space-y-3 h-80 overflow-y-auto pr-2 custom-scrollbar">
+            {sessions.map((s, idx) => (
+              <div key={idx} className="bg-gray-900/80 border border-gray-800 rounded-xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-gray-600 transition">
+                <div className="flex items-center gap-4">
+                  <div className={`w-2 h-2 rounded-full ${s.status === 'success' ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
+                  <div>
+                    <p className="font-mono text-sm text-gray-300"><span className="text-gray-500">USER:</span> {s.id} <span className="text-gray-500 mx-2">|</span> {s.item}</p>
+                    <p className="text-xs text-gray-500 mt-1">Failed Amount: ₹{s.amount.toLocaleString()}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+                  <div className="text-left md:text-right">
+                    <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">AI Protocol</p>
+                    <span className={`text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-md ${
+                      s.method === 'factoring' ? 'bg-green-900/30 text-green-400 border border-green-800' :
+                      s.method === 'split_tender' ? 'bg-yellow-900/30 text-yellow-400 border border-yellow-800' :
+                      'bg-purple-900/30 text-purple-400 border border-purple-800'
+                    }`}>
+                      {s.method.replace('_', ' ')}
+                    </span>
+                  </div>
+                  <div className="text-right w-24">
+                    <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Result</p>
+                    {s.status === 'success' ? (
+                      <span className="text-green-400 font-bold">₹{s.recovered.toLocaleString()}</span>
+                    ) : (
+                      <span className="text-red-400 font-bold">Lost</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
+
       </div>
     </main>
   );
