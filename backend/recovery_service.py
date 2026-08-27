@@ -1,12 +1,20 @@
 import time
 import json
+from typing import Dict, Any, List
 from api_clients import create_razorpay_link, gemini_model
+from google.api_core.exceptions import GoogleAPIError
 
 class RecoveryService:
-    def __init__(self):
-        self.audit_trail = []
+    """
+    Service responsible for orchestrating the 3-layer AI Revenue Recovery waterfall.
+    """
+    def __init__(self) -> None:
+        self.audit_trail: List[Dict[str, Any]] = []
 
-    def log(self, event_type, details):
+    def log(self, event_type: str, details: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Immutably logs an event to the audit trail.
+        """
         event = {
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
             "event_type": event_type,
@@ -16,7 +24,10 @@ class RecoveryService:
         print(f"[AUDIT] {event_type}: {details}")
         return event
 
-    def trigger_factoring(self, user_id, amount):
+    def trigger_factoring(self, user_id: str, amount: float) -> Dict[str, Any]:
+        """
+        Layer 1: AI Factoring. Acts as a micro-lender to negotiate an EMI plan.
+        """
         self.log("layer_1_factoring_started", {"user": user_id, "amount": amount})
         prompt = f"""
         You are an AI Risk Analyst for a micro-lending firm. A user ({user_id}) just had a payment fail for ₹{amount}.
@@ -44,11 +55,17 @@ class RecoveryService:
             else:
                 self.log("factoring_rejected", {"ai_reason": ai_decision.get('reason')})
                 return {"success": False}
-        except Exception as e:
-            self.log("ai_error", {"error": str(e)})
+        except (json.JSONDecodeError, ValueError) as parse_err:
+            self.log("ai_parsing_error", {"error": str(parse_err)})
+            return {"success": False}
+        except GoogleAPIError as api_err:
+            self.log("ai_network_error", {"error": str(api_err)})
             return {"success": False}
 
-    def trigger_split_tender(self, user_id, amount):
+    def trigger_split_tender(self, user_id: str, amount: float) -> Dict[str, Any]:
+        """
+        Layer 2: Split Tender. Divides the failed payment into two separate links (60/40 split).
+        """
         self.log("layer_2_split_tender_started", {"user": user_id, "amount": amount})
         amount1, amount2 = round(amount * 0.6, 2), round(amount * 0.4, 2)
         link1 = create_razorpay_link(amount1, f"Part 1 for {user_id}", self.log)
@@ -62,20 +79,26 @@ class RecoveryService:
             "message": "Card limit exceeded. Split your bill into 2 payments!"
         }
 
-    def trigger_data_for_debt(self, user_id, amount):
+    def trigger_data_for_debt(self, user_id: str, amount: float) -> Dict[str, Any]:
+        """
+        Layer 3: Data-for-Debt. Waives small fees in exchange for marketing data.
+        """
         self.log("layer_3_data_for_debt_started", {"user": user_id, "amount_waived": amount})
         return {
             "success": True, "method": "data_for_debt", "amount_waived": amount,
             "task": "Complete a 5-minute product feedback survey to waive your fee!"
         }
 
-    def recover(self, user_id: str, amount: float):
+    def recover(self, user_id: str, amount: float) -> Dict[str, Any]:
+        """
+        Main orchestration method that routes to the appropriate recovery layer.
+        """
         self.audit_trail.clear()
         self.log("payment_failed_intercepted", {"user": user_id, "amount": amount})
 
         if amount >= 40000:
             result = self.trigger_factoring(user_id, amount)
-            if result["success"]: return {"recovery": result, "audit": self.audit_trail}
+            if result.get("success"): return {"recovery": result, "audit": self.audit_trail}
             result = self.trigger_split_tender(user_id, amount)
             return {"recovery": result, "audit": self.audit_trail}
         elif 4000 <= amount < 40000:
