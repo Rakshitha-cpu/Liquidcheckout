@@ -1,12 +1,14 @@
 import razorpay
 import google.generativeai as genai
-from config import RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET, GEMINI_API_KEY, CALLBACK_URL
+from config import settings
 import time
 from typing import Callable, Any
 
-# Initialize APIs
-rzp_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
-genai.configure(api_key=GEMINI_API_KEY)
+# Initialize Razorpay
+rzp_client = razorpay.Client(auth=(settings.razorpay_key_id, settings.razorpay_key_secret))
+
+# Initialize Gemini
+genai.configure(api_key=settings.gemini_api_key)
 gemini_model = genai.GenerativeModel('gemini-1.5-flash', generation_config={"response_mime_type": "application/json"})
 
 def create_razorpay_link(amount_inr: float, description: str, log_fn: Callable[[str, dict], dict], retries: int = 3) -> str:
