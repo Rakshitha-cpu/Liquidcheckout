@@ -21,4 +21,15 @@ class AuditLog(Base):
     event_type = Column(String, index=True)
     details = Column(String) # Stored as JSON string
 
+class PaymentSession(Base):
+    __tablename__ = "payment_sessions"
+    id = Column(Integer, primary_key=True, index=True)
+    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+    user_id = Column(String)
+    item = Column(String)
+    amount = Column(Float)
+    method = Column(String)
+    recovered = Column(Float)
+    status = Column(String)
+
 Base.metadata.create_all(bind=engine)

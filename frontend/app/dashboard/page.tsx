@@ -1,42 +1,25 @@
 "use client";
 import { useState, useEffect } from "react";
 
-const generateBatch = () => {
-  const batch = [];
-  const methods = ["factoring", "split_tender", "data_for_debt"];
-  const items = ["MacBook Pro", "Sneakers", "SaaS Sub", "Headphones", "Office Chair"];
-  
-  for (let i = 1; i <= 30; i++) {
-    const amount = Math.floor(Math.random() * 100000) + 1200;
-    let method = "data_for_debt";
-    if (amount > 40000) method = "factoring";
-    else if (amount > 4000) method = "split_tender";
-
-    const isSuccess = Math.random() > 0.10; 
-    let recovered = 0;
-    
-    if (isSuccess) {
-      if (method === "factoring") recovered = amount * 0.95;
-      else recovered = amount;
-    }
-
-    batch.push({
-      id: `U1${i.toString().padStart(3, '0')}`,
-      item: items[i % 5],
-      amount: amount,
-      method: method,
-      recovered: recovered,
-      status: isSuccess ? "success" : "stopped"
-    });
-  }
-  return batch;
-};
-
 export default function Dashboard() {
   const [sessions, setSessions] = useState<any[]>([]);
 
+  // Fetch real-time data from the actual database
+  const fetchStats = async () => {
+    try {
+      const res = await fetch("http://127.0.0.1:8000/stats");
+      const data = await res.json();
+      setSessions(data.sessions || []);
+    } catch (err) {
+      console.error("Failed to fetch live stats", err);
+    }
+  };
+
   useEffect(() => {
-    setSessions(generateBatch());
+    fetchStats();
+    // Refresh the live dashboard every 3 seconds to show new interceptions!
+    const interval = setInterval(fetchStats, 3000);
+    return () => clearInterval(interval);
   }, []);
 
   const totalFailed = sessions.reduce((s, r) => s + r.amount, 0);

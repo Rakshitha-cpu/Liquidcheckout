@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from recovery_service import RecoveryService
+from database import SessionLocal, PaymentSession
 
 app = FastAPI()
 
@@ -20,19 +21,37 @@ def read_root():
 @app.post("/recover")
 def recover_failed_payment(user_id: str, amount: float):
     if not user_id or amount <= 0:
-        raise HTTPException(status_code=400, detail="Invalid user_id or amount must be greater than zero")
+        raise HTTPException(status_code=400, detail="Invalid user_id or amount")
         
     try:
         result = svc.recover(user_id, amount)
         if not result.get("recovery"):
-            raise HTTPException(status_code=500, detail="Recovery process failed unexpectedly")
+            raise HTTPException(status_code=500, detail="Recovery failed")
         return result
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/logs/{user_id}")
 def get_user_logs(user_id: str):
-    logs = svc.get_logs(user_id)
-    if not logs:
-        raise HTTPException(status_code=404, detail="No logs found for this user")
-    return {"logs": logs}
+    return {"logs": svc.get_logs(user_id)}
+
+@app.get("/stats")
+def get_dashboard_stats():
+    db = SessionLocal()
+    try:
+        sessions = db.query(PaymentSession).order_by(PaymentSession.timestamp.desc()).all()
+        return {
+            "sessions": [
+                {
+                    "id": s.user_id,
+                    "item": s.item,
+                    "amount": s.amount,
+                    "method": s.method,
+                    "recovered": s.recovered,
+                    "status": s.status,
+                    "time": s.timestamp.isoformat()
+                } for s in sessions
+            ]
+        }
+    finally:
+        db.close()
