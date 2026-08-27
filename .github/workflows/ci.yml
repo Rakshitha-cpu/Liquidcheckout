@@ -32,7 +32,7 @@ jobs:
     - name: Run Backend Tests
       run: |
         cd backend
-        pytest || echo "No tests to run"
+        pytest --cov=./ || echo "No tests to run"
         
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -52,7 +52,7 @@ jobs:
     - name: Run Frontend Tests (Jest)
       run: |
         cd frontend
-        npm test --passWithNoTests || true
+        npm test -- --coverage --passWithNoTests || true
 
     - name: Build Docker Container
       run: |
