@@ -5,14 +5,13 @@ export default function Storefront() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [showLogs, setShowLogs] = useState(false);
-  
-  const [customName, setCustomName] = useState("");
-  const [customPrice, setCustomPrice] = useState("");
 
   const simulateFailedPayment = async (amount: number) => {
+    // Reset state for "n number of trials"
     setLoading(true);
     setResult(null);
     setShowLogs(false);
+    
     try {
       const res = await fetch(
         `http://127.0.0.1:8000/recover?user_id=U101&amount=${amount}`,
@@ -26,225 +25,159 @@ export default function Storefront() {
     setLoading(false);
   };
 
-  const handleCustomBuy = (e: React.FormEvent) => {
-    e.preventDefault();
-    const price = parseInt(customPrice);
-    if (price > 0) simulateFailedPayment(price);
-  };
-
   return (
-    <main className="min-h-screen bg-gray-950 text-white flex flex-col items-center p-10 lg:p-20">
-
-      {/* Header */}
-      <div className="text-center mb-12">
-        <h1 className="text-5xl lg:text-6xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
-          Liquid Checkout Demo
-        </h1>
-        <p className="text-gray-400 text-lg lg:text-xl max-w-2xl mx-auto">
-          Experience how our AI Revenue Recovery Engine saves failed payments in real-time.
-        </p>
-      </div>
-
-      {/* Instruction Guide for Judges */}
-      <div className="w-full max-w-[1400px] bg-indigo-900/20 border border-indigo-500/30 rounded-3xl p-8 mb-12 shadow-2xl flex flex-col md:flex-row gap-8 items-center">
-        <div className="flex-1">
-          <h2 className="text-2xl font-bold text-indigo-300 mb-4 flex items-center gap-2">
-            <span>ℹ️</span> How to test this demo:
-          </h2>
-          <ol className="space-y-4 text-gray-300 text-lg">
-            <li><strong className="text-white">Step 1:</strong> Try to buy a product below.</li>
-            <li><strong className="text-white">Step 2:</strong> The standard payment gateway will "fail" the transaction.</li>
-            <li><strong className="text-white">Step 3:</strong> Watch our AI instantly intercept the failure and negotiate a recovery method based on the price.</li>
-          </ol>
-        </div>
-        <div className="hidden md:block w-px h-32 bg-indigo-500/30"></div>
-        <div className="flex-1 text-center md:text-left">
-          <p className="text-sm text-gray-400 uppercase tracking-widest font-bold mb-2">The 3 AI Rules:</p>
-          <ul className="text-sm text-gray-300 space-y-2">
-            <li><span className="text-green-400 font-bold">&gt; ₹40,000</span> = Agentic Factoring (EMI)</li>
-            <li><span className="text-yellow-400 font-bold">₹4,000 - ₹40,000</span> = Split Tender Links</li>
-            <li><span className="text-purple-400 font-bold">&lt; ₹4,000</span> = Data-for-Debt (Survey)</li>
-          </ul>
-        </div>
-      </div>
-
-      {/* Dynamic Search & Buy Bar */}
-      <div className="w-full max-w-[1400px] bg-gray-900 border border-gray-700 rounded-3xl p-8 mb-12 shadow-2xl">
-        <h2 className="text-sm font-bold text-gray-300 uppercase tracking-widest mb-4">🔍 Try a custom amount</h2>
-        <form onSubmit={handleCustomBuy} className="flex flex-col md:flex-row gap-4">
-          <input 
-            type="text" 
-            required
-            value={customName}
-            onChange={(e) => setCustomName(e.target.value)}
-            placeholder="Product Name (e.g., iPhone 15)" 
-            className="flex-1 bg-gray-800 border border-gray-700 rounded-xl p-4 text-lg text-white focus:outline-none focus:border-indigo-500"
-          />
-          <div className="relative w-full md:w-64">
-            <span className="absolute left-4 top-4 text-gray-400 text-lg">₹</span>
-            <input 
-              type="number" 
-              required
-              min="1"
-              value={customPrice}
-              onChange={(e) => setCustomPrice(e.target.value)}
-              placeholder="Price" 
-              className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 pl-10 text-lg text-white focus:outline-none focus:border-indigo-500"
-            />
-          </div>
-          <button 
-            type="submit"
-            className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-10 py-4 rounded-xl transition text-lg"
-          >
-            Buy Now
-          </button>
-        </form>
-      </div>
-
-      {/* Quick Demo Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 w-full max-w-[1400px]">
-
-        {/* High Ticket */}
-        <div className="bg-gray-800 rounded-3xl p-8 flex flex-col items-center shadow-lg hover:ring-2 ring-indigo-500 transition cursor-pointer" onClick={() => simulateFailedPayment(96000)}>
-          <span className="text-5xl mb-4">💻</span>
-          <h2 className="text-xl font-bold text-center">MacBook Air</h2>
-          <p className="text-indigo-400 text-2xl font-extrabold my-2">₹96,000</p>
-          <button className="bg-gray-700 hover:bg-gray-600 text-white py-3 px-6 rounded-xl w-full transition font-bold mt-4">
-            Trigger Factoring
-          </button>
+    <main className="min-h-screen bg-[#050505] text-white p-8 relative overflow-hidden flex flex-col items-center">
+      
+      {/* Background Glows */}
+      <div className="absolute top-[-20%] left-[20%] w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[150px]"></div>
+      
+      <div className="w-full max-w-5xl z-10 relative">
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl font-extrabold tracking-tight text-white mb-2">The Liquid Storefront</h1>
+          <p className="text-gray-400">Test our AI-Powered Payment Recovery in action</p>
         </div>
 
-        {/* Mid Ticket */}
-        <div className="bg-gray-800 rounded-3xl p-8 flex flex-col items-center shadow-lg hover:ring-2 ring-indigo-500 transition cursor-pointer" onClick={() => simulateFailedPayment(12000)}>
-          <span className="text-5xl mb-4">👟</span>
-          <h2 className="text-xl font-bold text-center">Nike Sneakers</h2>
-          <p className="text-indigo-400 text-2xl font-extrabold my-2">₹12,000</p>
-          <button className="bg-gray-700 hover:bg-gray-600 text-white py-3 px-6 rounded-xl w-full transition font-bold mt-4">
-            Trigger Split Tender
-          </button>
-        </div>
-
-        {/* Low Ticket */}
-        <div className="bg-gray-800 rounded-3xl p-8 flex flex-col items-center shadow-lg hover:ring-2 ring-indigo-500 transition cursor-pointer" onClick={() => simulateFailedPayment(1200)}>
-          <span className="text-5xl mb-4">🎬</span>
-          <h2 className="text-xl font-bold text-center">Netflix Sub</h2>
-          <p className="text-indigo-400 text-2xl font-extrabold my-2">₹1,200</p>
-          <button className="bg-gray-700 hover:bg-gray-600 text-white py-3 px-6 rounded-xl w-full transition font-bold mt-4">
-            Trigger Data-for-Debt
-          </button>
-        </div>
-      </div>
-
-      {/* Loading State */}
-      {loading && (
-        <div className="flex flex-col items-center text-indigo-300 my-10 w-full max-w-[1400px]">
-          <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="animate-pulse text-xl font-bold">AI Intercepting Failed Payment...</p>
-        </div>
-      )}
-
-      {/* Result Panel */}
-      {result && !loading && (
-        <div className="w-full max-w-[1400px] bg-gray-800 rounded-3xl p-10 shadow-2xl border border-gray-700 animate-fade-in-up">
-
-          {/* Error State */}
-          {result.error && (
-            <div className="text-red-400 font-bold text-xl text-center">
-              {result.error}
-            </div>
-          )}
-
-          {/* Recovery Method Badge */}
-          {result.recovery && (
-            <div className="mb-8 border-b border-gray-700 pb-6 text-center md:text-left">
-              <span className="bg-green-600/20 text-green-400 border border-green-500/50 px-6 py-2 rounded-full font-bold uppercase tracking-widest text-sm">
-                Active Protocol: {result.recovery.method?.replace(/_/g, " ")}
-              </span>
-            </div>
-          )}
-
-          {/* Layer 1: Factoring */}
-          {result.recovery?.method === "factoring" && (
-            <div className="text-green-400 mb-6">
-              <p className="text-3xl font-extrabold mb-4">🎉 Lending AI Approved!</p>
-              <div className="bg-green-900/20 p-6 rounded-2xl border border-green-800 text-lg">
-                <p className="text-gray-200 mb-2">Merchant payout guaranteed: <strong className="text-green-400 text-2xl">₹{result.recovery.merchant_payout?.toLocaleString()}</strong></p>
-                <p className="text-gray-200">Your new payment plan: <strong className="text-white text-2xl">6 EMIs of ₹{result.recovery.user_emi?.toLocaleString()}/month</strong></p>
-                <button className="mt-8 w-full bg-green-600 hover:bg-green-500 text-white font-bold py-4 rounded-xl transition text-lg shadow-lg shadow-green-900/50">
-                  Accept & Complete Checkout
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Layer 2: Split Tender */}
-          {result.recovery?.method === "split_tender" && (
-            <div className="text-yellow-400 mb-6">
-              <p className="text-3xl font-extrabold mb-4">⚡ Payment Split into 2 Links!</p>
-              <p className="mb-6 text-lg text-gray-300">
-                Your primary card limit was exceeded. Complete both payments below to bypass the limit and confirm your order.
-              </p>
-
-              <div className="space-y-4">
-                <div className="bg-gray-900 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between border border-gray-700 gap-4">
-                  <div className="text-center md:text-left">
-                    <p className="text-sm text-gray-400 uppercase tracking-widest font-bold">Part 1</p>
-                    <p className="text-3xl font-bold text-white">₹{result.recovery.link1_amount?.toLocaleString()}</p>
-                  </div>
-                  <a href={result.recovery.link1_url} target="_blank" rel="noreferrer" className="w-full md:w-auto text-center bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold py-3 px-10 rounded-xl transition text-lg">
-                    Pay Now
-                  </a>
-                </div>
-
-                <div className="bg-gray-900 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between border border-gray-700 gap-4">
-                  <div className="text-center md:text-left">
-                    <p className="text-sm text-gray-400 uppercase tracking-widest font-bold">Part 2</p>
-                    <p className="text-3xl font-bold text-white">₹{result.recovery.link2_amount?.toLocaleString()}</p>
-                  </div>
-                  <a href={result.recovery.link2_url} target="_blank" rel="noreferrer" className="w-full md:w-auto text-center bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold py-3 px-10 rounded-xl transition text-lg">
-                    Pay Now
-                  </a>
-                </div>
-              </div>
-
-              <div className="mt-6 bg-red-900/20 border border-red-900 rounded-xl p-4 text-center">
-                <p className="text-sm text-red-400 font-bold flex justify-center items-center gap-2">
-                  <span>⚠️</span> Stopping Rule Active: Auto-refund triggered if Part 2 is not paid within 15 minutes.
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* Layer 3: Data-for-Debt */}
-          {result.recovery?.method === "data_for_debt" && (
-            <div className="text-purple-400 mb-6">
-              <p className="text-3xl font-extrabold mb-4">🤝 Data-for-Debt Offer!</p>
-              <div className="bg-purple-900/20 p-6 rounded-2xl border border-purple-800 text-lg">
-                <p className="text-gray-200">{result.recovery.task}</p>
-                <button className="mt-8 w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-4 rounded-xl transition text-lg shadow-lg shadow-purple-900/50">
-                  Start Survey — Waive ₹{result.recovery.amount_waived} Fee
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Hidden Compliance Audit Trail */}
-          <div className="mt-10 pt-6 border-t border-gray-700 text-center md:text-left">
+        {/* Product Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          
+          {/* Card 1 */}
+          <div className="bg-gray-950/80 backdrop-blur-xl border border-gray-800 rounded-3xl p-8 flex flex-col items-center shadow-xl hover:border-indigo-500/50 transition relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-600/10 rounded-full blur-2xl group-hover:bg-indigo-600/20 transition"></div>
+            <span className="text-5xl mb-4 relative z-10">💻</span>
+            <h2 className="text-lg font-bold text-gray-200 relative z-10">MacBook Air</h2>
+            <p className="text-white text-2xl font-extrabold my-2 relative z-10">₹96,000</p>
             <button 
-              onClick={() => setShowLogs(!showLogs)}
-              className="text-sm text-gray-500 hover:text-gray-300 transition flex items-center justify-center md:justify-start gap-2 uppercase tracking-widest font-bold w-full md:w-auto"
+              onClick={() => simulateFailedPayment(96000)}
+              className="mt-6 w-full bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white font-medium py-2.5 rounded-full transition relative z-10"
             >
-              {showLogs ? "▼ Hide AI Audit Logs" : "▶ View AI Audit Logs (Judges)"}
+              Pay Now
             </button>
-            
-            {showLogs && (
-              <div className="mt-4 bg-gray-950 rounded-2xl p-6 text-sm text-green-300 font-mono max-h-80 overflow-y-auto border border-gray-800 text-left">
-                <pre>{JSON.stringify(result.audit, null, 2)}</pre>
-              </div>
-            )}
+          </div>
+
+          {/* Card 2 */}
+          <div className="bg-gray-950/80 backdrop-blur-xl border border-gray-800 rounded-3xl p-8 flex flex-col items-center shadow-xl hover:border-indigo-500/50 transition relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-600/10 rounded-full blur-2xl group-hover:bg-indigo-600/20 transition"></div>
+            <span className="text-5xl mb-4 relative z-10">👟</span>
+            <h2 className="text-lg font-bold text-gray-200 relative z-10">Nike Sneakers</h2>
+            <p className="text-white text-2xl font-extrabold my-2 relative z-10">₹12,000</p>
+            <button 
+              onClick={() => simulateFailedPayment(12000)}
+              className="mt-6 w-full bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white font-medium py-2.5 rounded-full transition relative z-10"
+            >
+              Pay Now
+            </button>
+          </div>
+
+          {/* Card 3 */}
+          <div className="bg-gray-950/80 backdrop-blur-xl border border-gray-800 rounded-3xl p-8 flex flex-col items-center shadow-xl hover:border-indigo-500/50 transition relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-600/10 rounded-full blur-2xl group-hover:bg-indigo-600/20 transition"></div>
+            <span className="text-5xl mb-4 relative z-10">🎬</span>
+            <h2 className="text-lg font-bold text-gray-200 relative z-10">Netflix Sub</h2>
+            <p className="text-white text-2xl font-extrabold my-2 relative z-10">₹1,200</p>
+            <button 
+              onClick={() => simulateFailedPayment(1200)}
+              className="mt-6 w-full bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white font-medium py-2.5 rounded-full transition relative z-10"
+            >
+              Pay Now
+            </button>
           </div>
         </div>
-      )}
+
+        {/* Loading Bar */}
+        {loading && (
+          <div className="flex flex-col items-center text-center my-16 animate-fade-in-up">
+            <p className="text-gray-300 font-medium mb-4">Simulating Payment Failure...</p>
+            <p className="text-xs text-indigo-400 mb-6">AI is analyzing the failure and crafting the best recovery option.</p>
+            <div className="w-96 h-1.5 bg-gray-800 rounded-full overflow-hidden relative">
+              <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 w-full animate-[shimmer_1.5s_infinite]"></div>
+            </div>
+          </div>
+        )}
+
+        {/* Results Panel */}
+        {result && !loading && (
+          <div className="bg-gray-950/80 backdrop-blur-xl border border-gray-800 rounded-3xl p-10 shadow-2xl animate-fade-in-up">
+            <div className="text-center mb-10">
+              <span className="text-xs font-bold uppercase tracking-widest text-gray-500">AI Recovery Options</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              
+              {/* Option 1: EMI (Highlights if selected) */}
+              <div className={`rounded-2xl p-6 border transition ${result.recovery?.method === 'factoring' ? 'bg-green-900/10 border-green-500 shadow-[0_0_30px_rgba(34,197,94,0.1)]' : 'bg-gray-900/50 border-gray-800 opacity-50'}`}>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="font-bold text-gray-200">EMI Loan Offer</h3>
+                  {result.recovery?.method === 'factoring' && <span className="bg-green-500/20 text-green-400 text-[10px] px-2 py-1 rounded-sm uppercase tracking-wider font-bold">Recommended</span>}
+                </div>
+                {result.recovery?.method === 'factoring' ? (
+                  <>
+                    <p className="text-sm text-gray-400 mb-1">Get this for as low as</p>
+                    <p className="text-2xl font-extrabold text-white mb-1">₹{result.recovery.user_emi?.toLocaleString()} / month</p>
+                    <p className="text-xs text-gray-500 mb-6">via our lending partners</p>
+                    <button className="w-full bg-transparent border border-green-500 text-green-400 hover:bg-green-500/10 font-medium py-2 rounded-lg transition">Accept EMI Offer</button>
+                  </>
+                ) : (
+                  <p className="text-sm text-gray-500 mt-4 text-center">Not eligible</p>
+                )}
+              </div>
+
+              {/* Option 2: Split Tender (Highlights if selected) */}
+              <div className={`rounded-2xl p-6 border transition ${result.recovery?.method === 'split_tender' ? 'bg-yellow-900/10 border-yellow-500 shadow-[0_0_30px_rgba(234,179,8,0.1)]' : 'bg-gray-900/50 border-gray-800 opacity-50'}`}>
+                <h3 className="font-bold text-gray-200 mb-4">Split Tender</h3>
+                {result.recovery?.method === 'split_tender' ? (
+                  <>
+                    <p className="text-sm text-gray-400 mb-1">Pay in 2 parts via Razorpay</p>
+                    <p className="text-xl font-extrabold text-white mt-3">₹{result.recovery.link1_amount?.toLocaleString()} now</p>
+                    <p className="text-sm font-medium text-gray-400 mb-6">+ ₹{result.recovery.link2_amount?.toLocaleString()} later</p>
+                    <button className="w-full bg-transparent border border-yellow-500 text-yellow-400 hover:bg-yellow-500/10 font-medium py-2 rounded-lg transition">Choose Split Tender</button>
+                  </>
+                ) : (
+                  <p className="text-sm text-gray-500 mt-4 text-center">Not eligible</p>
+                )}
+              </div>
+
+              {/* Option 3: Data for Debt (Highlights if selected) */}
+              <div className={`rounded-2xl p-6 border transition ${result.recovery?.method === 'data_for_debt' ? 'bg-purple-900/10 border-purple-500 shadow-[0_0_30px_rgba(168,85,247,0.1)]' : 'bg-gray-900/50 border-gray-800 opacity-50'}`}>
+                <h3 className="font-bold text-gray-200 mb-4">Data-for-Debt Waiver</h3>
+                {result.recovery?.method === 'data_for_debt' ? (
+                  <>
+                    <p className="text-sm text-gray-400 mb-4">Answer a quick survey & get 100% of the fee waived.</p>
+                    <div className="h-6"></div>
+                    <button className="mt-5 w-full bg-transparent border border-purple-500 text-purple-400 hover:bg-purple-500/10 font-medium py-2 rounded-lg transition">Take Survey</button>
+                  </>
+                ) : (
+                  <p className="text-sm text-gray-500 mt-4 text-center">Not eligible</p>
+                )}
+              </div>
+
+            </div>
+
+            {/* Audit Log Toggle */}
+            <div className="mt-10 pt-6 border-t border-gray-800 text-center">
+              <button 
+                onClick={() => setShowLogs(!showLogs)}
+                className="text-xs text-gray-500 hover:text-gray-300 transition uppercase tracking-widest font-bold"
+              >
+                {showLogs ? "Hide Audit Logs (JSON)" : "Show Audit Logs (JSON)"}
+              </button>
+              
+              {showLogs && (
+                <div className="mt-4 bg-black rounded-xl p-6 text-xs text-green-400 font-mono max-h-60 overflow-y-auto border border-gray-800 text-left">
+                  <pre>{JSON.stringify(result.audit, null, 2)}</pre>
+                </div>
+              )}
+            </div>
+
+          </div>
+        )}
+      </div>
+
+      <style jsx global>{`
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+      `}</style>
     </main>
   );
 }
