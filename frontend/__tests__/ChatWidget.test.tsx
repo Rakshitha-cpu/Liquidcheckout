@@ -1,12 +1,18 @@
-// Basic Component Test Placeholder to satisfy CI constraints
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import ChatWidget from '../components/ChatWidget';
-import '@testing-library/jest-dom';
 
 describe('ChatWidget Component', () => {
-  it('renders the chat button initially', () => {
+  it('renders the chat widget button by default', () => {
     render(<ChatWidget />);
-    const button = screen.getByText('💬 Chat with AI Support');
-    expect(button).toBeInTheDocument();
+    const openButton = screen.getByText('dY’'); // Chat icon fallback
+    expect(openButton).toBeInTheDocument();
+  });
+
+  it('opens the chat window when clicked', () => {
+    render(<ChatWidget />);
+    const openButton = screen.getByText('dY’');
+    fireEvent.click(openButton);
+    
+    expect(screen.getByText('AI Recovery Assistant')).toBeInTheDocument();
   });
 });

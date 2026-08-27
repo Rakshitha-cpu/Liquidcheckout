@@ -28,8 +28,12 @@ def recover_failed_payment(user_id: str, amount: float):
         if not result.get("recovery"):
             raise HTTPException(status_code=500, detail="Recovery failed")
         return result
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=f"Data Validation Error: {str(ve)}")
+    except RuntimeError as re:
+        raise HTTPException(status_code=502, detail=f"External Service Error: {str(re)}")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
 @app.get("/logs/{user_id}")
 def get_user_logs(user_id: str):
